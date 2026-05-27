@@ -50,6 +50,7 @@ The MVP intentionally uses a lightweight heuristic optimizer instead of a backen
   - Focus Score
 - Score deltas after optimization
 - AI suggestion panel for shareable demo context
+- High-resolution PNG export for demos, README assets, and social posts
 - Copyable layout summary for social posts or issue reports
 - Fully frontend-only: no auth, no database, no backend
 - GitHub Pages deployment workflow included

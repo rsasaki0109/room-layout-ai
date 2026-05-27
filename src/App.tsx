@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import {
   Armchair,
   BedDouble,
   BookOpen,
   BrainCircuit,
   Check,
+  Download,
   Laptop,
   Monitor,
   Move,
@@ -37,6 +38,8 @@ const iconMap: Record<FurnitureType, typeof BedDouble> = {
 
 function App() {
   const [copied, setCopied] = useState(false)
+  const [exported, setExported] = useState(false)
+  const [exportNonce, setExportNonce] = useState(0)
   const room = useLayoutStore((state) => state.room)
   const furnitures = useLayoutStore((state) => state.furnitures)
   const selectedFurniture = useLayoutStore((state) =>
@@ -87,6 +90,16 @@ function App() {
     window.setTimeout(() => setCopied(false), 1600)
   }
 
+  const requestPngExport = useCallback(() => {
+    setExported(false)
+    setExportNonce((current) => current + 1)
+  }, [])
+
+  const handlePngExported = useCallback(() => {
+    setExported(true)
+    window.setTimeout(() => setExported(false), 1600)
+  }, [])
+
   return (
     <div className="min-h-screen bg-[#f7f8fb] text-slate-950">
       <div className="mx-auto flex min-h-screen w-full max-w-[1540px] flex-col gap-4 px-4 py-4 sm:px-6 lg:px-8">
@@ -129,6 +142,14 @@ function App() {
               <Sparkles className={optimizing ? 'h-4 w-4 animate-spin' : 'h-4 w-4'} />
               Optimize
             </motion.button>
+            <button
+              type="button"
+              onClick={requestPngExport}
+              className="inline-flex h-10 items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:shadow-md"
+            >
+              {exported ? <Check className="h-4 w-4 text-emerald-600" /> : <Download className="h-4 w-4 text-slate-700" />}
+              {exported ? 'PNG Saved' : 'Export PNG'}
+            </button>
           </div>
         </header>
 
@@ -249,7 +270,7 @@ function App() {
           </aside>
 
           <section className="order-1 min-w-0 rounded-lg border border-slate-200 bg-white p-3 shadow-sm sm:min-h-[560px] sm:p-4 lg:order-2">
-            <RoomCanvas />
+            <RoomCanvas exportNonce={exportNonce} onExported={handlePngExported} />
           </section>
 
           <aside className="order-3 min-w-0 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">

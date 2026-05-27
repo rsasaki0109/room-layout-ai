@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- High-resolution PNG export from the room canvas.
+
 ## v0.1.0 - 2026-05-27
 
 Initial public release of Room Layout AI.

@@ -8,8 +8,14 @@ import { clamp, getDoorZone } from '../lib/geometry'
 import { useLayoutStore } from '../store/layoutStore'
 import type { FurnitureItem } from '../types'
 
-export function RoomCanvas() {
+type RoomCanvasProps = {
+  exportNonce: number
+  onExported: () => void
+}
+
+export function RoomCanvas({ exportNonce, onExported }: RoomCanvasProps) {
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const stageRef = useRef<Konva.Stage>(null)
   const [wrapperWidth, setWrapperWidth] = useState(360)
   const room = useLayoutStore((state) => state.room)
   const furnitures = useLayoutStore((state) => state.furnitures)
@@ -41,6 +47,36 @@ export function RoomCanvas() {
   const doorZone = getDoorZone(room)
   const gridLines = useMemo(() => createGrid(room.width, room.height), [room.width, room.height])
 
+  useEffect(() => {
+    if (exportNonce === 0) {
+      return
+    }
+
+    const timeout = window.setTimeout(() => {
+      const stage = stageRef.current
+
+      if (!stage) {
+        return
+      }
+
+      const dataUrl = stage.toDataURL({
+        mimeType: 'image/png',
+        pixelRatio: 3,
+      })
+      const link = document.createElement('a')
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+
+      link.href = dataUrl
+      link.download = `room-layout-ai-${timestamp}.png`
+      document.body.append(link)
+      link.click()
+      link.remove()
+      onExported()
+    }, 80)
+
+    return () => window.clearTimeout(timeout)
+  }, [exportNonce, onExported])
+
   const handleStagePointer = (event: KonvaEventObject<MouseEvent | TouchEvent>) => {
     if (event.target === event.target.getStage()) {
       selectFurniture(null)
@@ -71,6 +107,7 @@ export function RoomCanvas() {
       ) : null}
 
       <Stage
+        ref={stageRef}
         width={stageWidth}
         height={stageHeight}
         className="rounded-lg shadow-2xl shadow-slate-200/80"
