@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Armchair,
   BedDouble,
@@ -10,6 +10,7 @@ import {
   Monitor,
   Move,
   Plus,
+  Play,
   RefreshCw,
   RotateCw,
   Ruler,
@@ -40,6 +41,8 @@ function App() {
   const [copied, setCopied] = useState(false)
   const [exported, setExported] = useState(false)
   const [exportNonce, setExportNonce] = useState(0)
+  const [demoRunning, setDemoRunning] = useState(false)
+  const demoTimers = useRef<number[]>([])
   const room = useLayoutStore((state) => state.room)
   const furnitures = useLayoutStore((state) => state.furnitures)
   const selectedFurniture = useLayoutStore((state) =>
@@ -101,6 +104,22 @@ function App() {
     window.setTimeout(() => setExported(false), 1600)
   }, [])
 
+  const runDemo = useCallback(() => {
+    demoTimers.current.forEach((timer) => window.clearTimeout(timer))
+    setDemoRunning(true)
+    makeMessyRoom()
+    demoTimers.current = [
+      window.setTimeout(() => optimize(), 520),
+      window.setTimeout(() => setDemoRunning(false), 1900),
+    ]
+  }, [makeMessyRoom, optimize])
+
+  useEffect(() => {
+    return () => {
+      demoTimers.current.forEach((timer) => window.clearTimeout(timer))
+    }
+  }, [])
+
   return (
     <div className="min-h-screen bg-[#f7f8fb] text-slate-950">
       <div className="mx-auto flex min-h-screen w-full max-w-[1540px] flex-col gap-4 px-4 py-4 sm:px-6 lg:px-8">
@@ -137,6 +156,16 @@ function App() {
             <motion.button
               type="button"
               whileTap={{ scale: 0.97 }}
+              onClick={runDemo}
+              disabled={demoRunning}
+              className="inline-flex h-10 items-center gap-2 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white shadow-lg shadow-slate-950/15 transition hover:bg-slate-800 disabled:cursor-wait disabled:opacity-80"
+            >
+              {demoRunning ? <Sparkles className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
+              {demoRunning ? 'Running Demo' : 'Run Demo'}
+            </motion.button>
+            <motion.button
+              type="button"
+              whileTap={{ scale: 0.97 }}
               onClick={makeMessyRoom}
               className="inline-flex h-10 items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:shadow-md"
             >
@@ -147,9 +176,9 @@ function App() {
               type="button"
               whileTap={{ scale: 0.97 }}
               onClick={optimize}
-              className="inline-flex h-10 items-center gap-2 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white shadow-lg shadow-slate-950/15 transition hover:bg-slate-800"
+              className="inline-flex h-10 items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:shadow-md"
             >
-              <Sparkles className={optimizing ? 'h-4 w-4 animate-spin' : 'h-4 w-4'} />
+              <Sparkles className={optimizing ? 'h-4 w-4 animate-spin text-cyan-600' : 'h-4 w-4 text-slate-700'} />
               Optimize
             </motion.button>
             <button

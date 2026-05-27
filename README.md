@@ -39,6 +39,7 @@ The MVP intentionally uses a lightweight heuristic optimizer instead of a backen
 - Furniture palette: bed, desk, chair, sofa, monitor, shelf
 - Drag-to-move furniture
 - Rotate and remove selected furniture
+- One-click Run Demo flow for instant dogfooding
 - Messy Room preset for dramatic before/after optimization demos
 - AI-style Optimize button with animated spatial scan
 - Before/after movement trails for optimized furniture
