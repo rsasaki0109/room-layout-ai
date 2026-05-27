@@ -18,6 +18,7 @@ type LayoutStore = {
   rotateSelected: (delta: number) => void
   removeSelected: () => void
   optimize: () => void
+  makeMessyRoom: () => void
   randomize: () => void
   reset: () => void
 }
@@ -147,6 +148,41 @@ export const useLayoutStore = create<LayoutStore>((set, get) => ({
     window.setTimeout(() => {
       set({ optimizing: false })
     }, optimizeDuration)
+  },
+  makeMessyRoom: () => {
+    const state = get()
+    const typeOffsets: Record<FurnitureType, { x: number; y: number; rotation: number }> = {
+      bed: { x: 0.43, y: 0.42, rotation: 90 },
+      desk: { x: 0.47, y: 0.47, rotation: 0 },
+      chair: { x: 0.5, y: 0.52, rotation: 0 },
+      sofa: { x: 0.39, y: 0.5, rotation: 0 },
+      monitor: { x: 0.49, y: 0.48, rotation: 0 },
+      shelf: { x: 0.08, y: 0.82, rotation: 0 },
+    }
+    const duplicateOffset = new Map<FurnitureType, number>()
+    const furnitures = state.furnitures.map((item) => {
+      const offset = typeOffsets[item.type]
+      const count = duplicateOffset.get(item.type) ?? 0
+
+      duplicateOffset.set(item.type, count + 1)
+
+      return clampItemToRoom(
+        {
+          ...item,
+          x: state.room.width * offset.x - item.width / 2 + count * 18,
+          y: state.room.height * offset.y - item.height / 2 + count * 18,
+          rotation: offset.rotation,
+        },
+        state.room,
+      )
+    })
+
+    set({
+      furnitures,
+      selectedId: null,
+      lastOptimization: null,
+      metrics: calculateMetrics(furnitures, state.room),
+    })
   },
   randomize: () => {
     const state = get()

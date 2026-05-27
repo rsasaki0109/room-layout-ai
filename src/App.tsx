@@ -53,6 +53,7 @@ function App() {
   const rotateSelected = useLayoutStore((state) => state.rotateSelected)
   const removeSelected = useLayoutStore((state) => state.removeSelected)
   const optimize = useLayoutStore((state) => state.optimize)
+  const makeMessyRoom = useLayoutStore((state) => state.makeMessyRoom)
   const randomize = useLayoutStore((state) => state.randomize)
   const reset = useLayoutStore((state) => state.reset)
 
@@ -133,6 +134,15 @@ function App() {
                 </span>
               ) : null}
             </div>
+            <motion.button
+              type="button"
+              whileTap={{ scale: 0.97 }}
+              onClick={makeMessyRoom}
+              className="inline-flex h-10 items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-slate-300 hover:shadow-md"
+            >
+              <RefreshCw className="h-4 w-4 text-slate-700" />
+              Messy Room
+            </motion.button>
             <motion.button
               type="button"
               whileTap={{ scale: 0.97 }}

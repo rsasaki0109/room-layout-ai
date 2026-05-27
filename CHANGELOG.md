@@ -5,6 +5,7 @@
 ### Added
 
 - High-resolution PNG export from the room canvas.
+- Messy Room preset for more dramatic before/after demos.
 
 ## v0.1.0 - 2026-05-27
 
