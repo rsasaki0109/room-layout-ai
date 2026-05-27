@@ -36,6 +36,7 @@ The MVP intentionally uses a lightweight heuristic optimizer instead of a backen
 
 - 2D room editor powered by React Konva
 - Room width and depth controls
+- Room-like floor plan with walls, window, entry swing, floor texture, and rug zone
 - Furniture palette: bed, desk, chair, sofa, monitor, shelf
 - Drag-to-move furniture
 - Rotate and remove selected furniture

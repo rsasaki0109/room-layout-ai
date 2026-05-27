@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Konva from 'konva'
-import { Arrow, Circle, Group, Layer, Line, Rect, Stage, Text } from 'react-konva'
+import { Arc, Arrow, Circle, Group, Layer, Line, Rect, Stage, Text } from 'react-konva'
 import type { KonvaEventObject } from 'konva/lib/Node'
 import { motion } from 'framer-motion'
 import { DoorOpen, Sparkles } from 'lucide-react'
@@ -45,7 +45,7 @@ export function RoomCanvas({ exportNonce, onExported }: RoomCanvasProps) {
   const stageWidth = room.width * scale
   const stageHeight = room.height * scale
   const doorZone = getDoorZone(room)
-  const gridLines = useMemo(() => createGrid(room.width, room.height), [room.width, room.height])
+  const floorLines = useMemo(() => createFloorLines(room.width, room.height), [room.width, room.height])
 
   useEffect(() => {
     if (exportNonce === 0) {
@@ -115,51 +115,7 @@ export function RoomCanvas({ exportNonce, onExported }: RoomCanvasProps) {
         onTouchStart={handleStagePointer}
       >
         <Layer scaleX={scale} scaleY={scale}>
-          <Rect
-            width={room.width}
-            height={room.height}
-            fill="#ffffff"
-            stroke="#d8dee9"
-            strokeWidth={2}
-            cornerRadius={20}
-          />
-
-          {gridLines.map((line) => (
-            <Line
-              key={line.key}
-              points={line.points}
-              stroke="#edf2f7"
-              strokeWidth={1}
-              listening={false}
-            />
-          ))}
-
-          <Rect
-            x={doorZone.x}
-            y={doorZone.y}
-            width={doorZone.width}
-            height={doorZone.height}
-            fill="rgba(6, 182, 212, 0.08)"
-            stroke="#67e8f9"
-            dash={[8, 8]}
-            cornerRadius={12}
-            listening={false}
-          />
-          <Line
-            points={[32, room.height, 126, room.height]}
-            stroke="#0f172a"
-            strokeWidth={5}
-            lineCap="round"
-            listening={false}
-          />
-          <Line
-            points={[32, room.height, 32, room.height - 78, 126, room.height - 78]}
-            stroke="#bae6fd"
-            strokeWidth={2}
-            dash={[5, 6]}
-            lineCap="round"
-            listening={false}
-          />
+          <RoomArchitecture roomWidth={room.width} roomHeight={room.height} doorZone={doorZone} floorLines={floorLines} />
 
           {lastOptimization
             ? lastOptimization.beforeFurniture.map((beforeItem) => {
@@ -187,6 +143,174 @@ export function RoomCanvas({ exportNonce, onExported }: RoomCanvasProps) {
         </Layer>
       </Stage>
     </div>
+  )
+}
+
+type FloorLine = {
+  key: string
+  points: number[]
+  opacity: number
+}
+
+type RoomArchitectureProps = {
+  roomWidth: number
+  roomHeight: number
+  doorZone: ReturnType<typeof getDoorZone>
+  floorLines: FloorLine[]
+}
+
+function RoomArchitecture({ roomWidth, roomHeight, doorZone, floorLines }: RoomArchitectureProps) {
+  const windowStart = roomWidth - 260
+  const windowEnd = roomWidth - 74
+  const hingeX = doorZone.x + 28
+  const hingeY = roomHeight - 6
+
+  return (
+    <>
+      <Rect
+        width={roomWidth}
+        height={roomHeight}
+        fill="#fffdfa"
+        stroke="#d8dee9"
+        strokeWidth={1}
+        cornerRadius={22}
+        listening={false}
+      />
+      <Rect
+        x={22}
+        y={22}
+        width={roomWidth - 44}
+        height={roomHeight - 44}
+        fill="#fbfaf7"
+        cornerRadius={18}
+        listening={false}
+      />
+
+      {floorLines.map((line) => (
+        <Line
+          key={line.key}
+          points={line.points}
+          stroke="#efe7d8"
+          strokeWidth={1}
+          opacity={line.opacity}
+          listening={false}
+        />
+      ))}
+
+      <Rect
+        x={roomWidth - 238}
+        y={24}
+        width={198}
+        height={124}
+        fill="#ecfeff"
+        opacity={0.38}
+        cornerRadius={22}
+        listening={false}
+      />
+      <Rect
+        x={roomWidth - 200}
+        y={roomHeight - 124}
+        width={160}
+        height={88}
+        fill="#fef3c7"
+        opacity={0.48}
+        cornerRadius={28}
+        listening={false}
+      />
+
+      <Rect
+        x={doorZone.x}
+        y={doorZone.y}
+        width={doorZone.width}
+        height={doorZone.height}
+        fill="rgba(6, 182, 212, 0.08)"
+        stroke="#67e8f9"
+        dash={[8, 8]}
+        cornerRadius={12}
+        listening={false}
+      />
+
+      <Line
+        points={[22, 5, roomWidth - 22, 5]}
+        stroke="#0f172a"
+        strokeWidth={8}
+        lineCap="round"
+        listening={false}
+      />
+      <Line
+        points={[5, 22, 5, roomHeight - 22]}
+        stroke="#0f172a"
+        strokeWidth={8}
+        lineCap="round"
+        listening={false}
+      />
+      <Line
+        points={[roomWidth - 5, 22, roomWidth - 5, roomHeight - 22]}
+        stroke="#0f172a"
+        strokeWidth={8}
+        lineCap="round"
+        listening={false}
+      />
+      <Line
+        points={[22, roomHeight - 5, doorZone.x + 8, roomHeight - 5]}
+        stroke="#0f172a"
+        strokeWidth={8}
+        lineCap="round"
+        listening={false}
+      />
+      <Line
+        points={[doorZone.x + doorZone.width + 8, roomHeight - 5, roomWidth - 22, roomHeight - 5]}
+        stroke="#0f172a"
+        strokeWidth={8}
+        lineCap="round"
+        listening={false}
+      />
+
+      <Line
+        points={[windowStart, 5, windowEnd, 5]}
+        stroke="#67e8f9"
+        strokeWidth={9}
+        lineCap="round"
+        listening={false}
+      />
+      <Text
+        x={windowStart + 56}
+        y={18}
+        text="Window"
+        fill="#64748b"
+        fontSize={11}
+        fontStyle="bold"
+        listening={false}
+      />
+
+      <Arc
+        x={hingeX}
+        y={hingeY}
+        innerRadius={72}
+        outerRadius={74}
+        angle={86}
+        rotation={-90}
+        fill="#67e8f9"
+        opacity={0.42}
+        listening={false}
+      />
+      <Line
+        points={[hingeX, hingeY, hingeX, roomHeight - 86]}
+        stroke="#0f172a"
+        strokeWidth={4}
+        lineCap="round"
+        listening={false}
+      />
+      <Text
+        x={doorZone.x + 42}
+        y={roomHeight - 36}
+        text="Entry"
+        fill="#64748b"
+        fontSize={11}
+        fontStyle="bold"
+        listening={false}
+      />
+    </>
   )
 }
 
@@ -453,16 +577,16 @@ function FurnitureDetails({ item }: { item: FurnitureItem }) {
   )
 }
 
-function createGrid(width: number, height: number) {
-  const lines: Array<{ key: string; points: number[] }> = []
-  const gap = 40
+function createFloorLines(width: number, height: number): FloorLine[] {
+  const lines: FloorLine[] = []
+  const gap = 34
 
   for (let x = gap; x < width; x += gap) {
-    lines.push({ key: `v-${x}`, points: [x, 0, x, height] })
+    lines.push({ key: `v-${x}`, points: [x, 18, x, height - 18], opacity: 0.42 })
   }
 
   for (let y = gap; y < height; y += gap) {
-    lines.push({ key: `h-${y}`, points: [0, y, width, y] })
+    lines.push({ key: `h-${y}`, points: [18, y, width - 18, y], opacity: 0.28 })
   }
 
   return lines

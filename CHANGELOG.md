@@ -7,6 +7,7 @@
 - High-resolution PNG export from the room canvas.
 - One-click Run Demo flow for dogfooding the full messy-to-optimized sequence.
 - Messy Room preset for more dramatic before/after demos.
+- More realistic room layout with walls, entry swing, window, floor texture, and room zones.
 
 ## v0.1.0 - 2026-05-27
 

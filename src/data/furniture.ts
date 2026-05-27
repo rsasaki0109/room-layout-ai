@@ -1,8 +1,8 @@
 import type { FurnitureItem, FurnitureTemplate, Room } from '../types'
 
 export const initialRoom: Room = {
-  width: 620,
-  height: 440,
+  width: 660,
+  height: 460,
 }
 
 export const furnitureTemplates: FurnitureTemplate[] = [
@@ -59,12 +59,12 @@ export const furnitureTemplates: FurnitureTemplate[] = [
 const templateByType = new Map(furnitureTemplates.map((item) => [item.type, item]))
 
 export const initialFurniture: FurnitureItem[] = [
-  createFurniture('bed', 'bed-1', 238, 178, 0),
-  createFurniture('desk', 'desk-1', 286, 158, 0),
-  createFurniture('chair', 'chair-1', 330, 224, 0),
-  createFurniture('sofa', 'sofa-1', 82, 292, 0),
-  createFurniture('monitor', 'monitor-1', 318, 174, 0),
-  createFurniture('shelf', 'shelf-1', 32, 326, 0),
+  createFurniture('bed', 'bed-1', 34, 46, 0),
+  createFurniture('desk', 'desk-1', 488, 42, 0),
+  createFurniture('chair', 'chair-1', 524, 118, 0),
+  createFurniture('sofa', 'sofa-1', 488, 354, 0),
+  createFurniture('monitor', 'monitor-1', 524, 56, 0),
+  createFurniture('shelf', 'shelf-1', 532, 238, 90),
 ]
 
 export function createFurniture(

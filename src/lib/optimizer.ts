@@ -53,11 +53,11 @@ export function calculateMetrics(items: FurnitureItem[], room: Room): Metrics {
   const bed = items.find((item) => item.type === 'bed')
   const sofa = items.find((item) => item.type === 'sofa')
 
-  const wallAlignedDesk = desk ? isNearWall(desk, room, 34) : false
+  const wallAlignedDesk = desk ? isNearWall(desk, room, 58) : false
   const chairNearDesk = desk && chair ? distanceBetween(desk, chair) < 128 : false
   const monitorOnDesk = desk && monitor ? distanceBetween(desk, monitor) < 72 : false
   const bedAnchored = bed ? isNearWall(bed, room, 42) : false
-  const sofaAnchored = sofa ? isNearWall(sofa, room, 42) : false
+  const sofaAnchored = sofa ? isNearWall(sofa, room, 52) : false
   const centerClear = items.filter((item) => isInCenter(item, room)).length <= 1
 
   const walkingEfficiency = clamp(
@@ -146,30 +146,29 @@ function getCandidates(item: FurnitureItem, room: Room, placed: FurnitureItem[])
 
   const candidatesByType: Record<FurnitureType, Candidate[]> = {
     bed: [
+      { x: pad + 6 + stagger, y: 46 + stagger, rotation: 0 },
       { x: pad + stagger, y: pad, rotation: 0 },
       { x: pad, y: room.height - item.height - pad - stagger, rotation: 0 },
-      { x: room.width - item.width - pad, y: pad + stagger, rotation: 0 },
     ],
     desk: [
-      { x: room.width - item.width - pad, y: pad + stagger, rotation: 0 },
-      { x: room.width / 2 - item.width / 2, y: pad + stagger, rotation: 0 },
-      { x: pad, y: pad + stagger, rotation: 0 },
+      { x: room.width - item.width - 54, y: 42 + stagger, rotation: 0 },
       { x: room.width - item.height - pad, y: room.height / 2 - item.width / 2, rotation: 90 },
+      { x: room.width / 2 - item.width / 2, y: pad + stagger, rotation: 0 },
     ],
     chair: [
       { x: room.width / 2 - item.width / 2 + stagger, y: room.height / 2 + 26, rotation: 0 },
     ],
     sofa: [
-      { x: room.width - item.width - pad, y: room.height - item.height - pad, rotation: 0 },
+      { x: room.width - item.width - 38, y: room.height - item.height - 44, rotation: 0 },
       { x: room.width / 2 - item.width / 2, y: room.height - item.height - pad, rotation: 0 },
-      { x: pad, y: pad + stagger, rotation: 0 },
+      { x: pad + 42, y: pad + stagger, rotation: 90 },
     ],
     monitor: [
       { x: room.width - item.width - pad - stagger, y: pad + 14, rotation: 0 },
     ],
     shelf: [
+      { x: room.width - item.height - 34, y: room.height / 2 + 8 + stagger, rotation: 90 },
       { x: room.width - item.width - pad, y: room.height / 2 - item.height / 2 + stagger, rotation: 0 },
-      { x: pad, y: room.height / 2 - item.height / 2 + stagger, rotation: 0 },
       { x: room.width / 2 - item.width / 2, y: pad + stagger, rotation: 0 },
     ],
   }
