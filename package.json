@@ -1,7 +1,7 @@
 {
   "name": "room-layout-ai",
   "private": false,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Spatial AI Playground for optimizing room layouts in the browser.",
   "homepage": "https://rsasaki0109.github.io/room-layout-ai/",
   "license": "MIT",

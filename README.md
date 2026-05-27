@@ -14,6 +14,12 @@ Room Layout AI is a **Spatial AI Playground** for instantly optimizing 2D room l
 
 https://rsasaki0109.github.io/room-layout-ai/
 
+## Release
+
+Current release: `v0.1.0`
+
+See [CHANGELOG.md](CHANGELOG.md) for release notes.
+
 This repo is configured with Vite `base: "/room-layout-ai/"` and a GitHub Pages workflow, so a push to `main` can publish the app without a backend.
 
 ## Screenshot
