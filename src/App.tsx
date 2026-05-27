@@ -323,6 +323,11 @@ function App() {
               </div>
             </div>
 
+            <BeforeAfterPanel
+              beforeMetrics={lastOptimization?.beforeMetrics}
+              afterMetrics={metrics}
+            />
+
             <div className="space-y-3">
               {metricKeys.map((key) => (
                 <MetricCard
@@ -379,6 +384,109 @@ function App() {
       </div>
     </div>
   )
+}
+
+type BeforeAfterPanelProps = {
+  beforeMetrics?: Metrics
+  afterMetrics: Metrics
+}
+
+function BeforeAfterPanel({ beforeMetrics, afterMetrics }: BeforeAfterPanelProps) {
+  const beforeScore = beforeMetrics ? averageScore(beforeMetrics) : null
+  const afterScore = averageScore(afterMetrics)
+  const delta = beforeScore === null ? 0 : afterScore - beforeScore
+  const highlights = beforeMetrics ? createImprovementHighlights(beforeMetrics, afterMetrics) : []
+
+  return (
+    <div className="mb-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="text-sm font-semibold text-slate-950">Before / After</div>
+        {beforeScore !== null ? (
+          <div className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold tabular-nums text-emerald-700">
+            {formatDelta(delta)} improved
+          </div>
+        ) : (
+          <div className="rounded-full bg-slate-200 px-2.5 py-1 text-xs font-semibold text-slate-500">
+            Waiting
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+        <ScoreTile label="Before" value={beforeScore} muted />
+        <div className="text-sm font-semibold text-slate-400">{'->'}</div>
+        <ScoreTile label="After" value={afterScore} />
+      </div>
+
+      {beforeMetrics ? (
+        <div className="mt-3 space-y-2">
+          {highlights.map((highlight) => (
+            <div
+              key={highlight.label}
+              className="flex items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm"
+            >
+              <span className="font-medium text-slate-700">{highlight.label}</span>
+              <span
+                className={
+                  highlight.delta >= 0
+                    ? 'font-semibold tabular-nums text-emerald-700'
+                    : 'font-semibold tabular-nums text-rose-700'
+                }
+              >
+                {formatDelta(highlight.delta)}
+              </span>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="mt-3 rounded-md border border-dashed border-slate-300 bg-white px-3 py-3 text-sm leading-5 text-slate-500">
+          Run Demo or Optimize to generate a visible comparison.
+        </div>
+      )}
+    </div>
+  )
+}
+
+type ScoreTileProps = {
+  label: string
+  value: number | null
+  muted?: boolean
+}
+
+function ScoreTile({ label, value, muted = false }: ScoreTileProps) {
+  return (
+    <div className="rounded-lg border border-slate-200 bg-white p-3">
+      <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+        {label}
+      </div>
+      <div
+        className={
+          muted
+            ? 'mt-1 text-2xl font-semibold tabular-nums text-slate-500'
+            : 'mt-1 text-2xl font-semibold tabular-nums text-slate-950'
+        }
+      >
+        {value ?? '--'}
+      </div>
+    </div>
+  )
+}
+
+function createImprovementHighlights(before: Metrics, after: Metrics) {
+  return [
+    {
+      label: 'Door path',
+      delta: after.walkingEfficiency - before.walkingEfficiency,
+    },
+    {
+      label: 'Work zone',
+      delta: after.workspaceScore - before.workspaceScore,
+    },
+    {
+      label: 'Open space',
+      delta: after.freeSpace - before.freeSpace,
+    },
+  ]
 }
 
 function averageScore(metrics: Metrics) {

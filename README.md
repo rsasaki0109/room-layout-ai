@@ -44,6 +44,7 @@ The MVP intentionally uses a lightweight heuristic optimizer instead of a backen
 - Messy Room preset for dramatic before/after optimization demos
 - AI-style Optimize button with animated spatial scan
 - Before/after movement trails for optimized furniture
+- Before / After comparison panel with improvement highlights
 - Heuristic layout optimization for wall alignment, door clearance, collisions, and open center paths
 - Animated score cards:
   - Walking Efficiency
