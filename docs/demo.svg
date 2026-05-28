@@ -1,55 +1,176 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-label="Room Layout AI optimize animation preview">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-label="Room Layout AI Run Demo animation preview">
   <defs>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#0f172a" flood-opacity="0.14"/>
+    <filter id="soft-shadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="14" stdDeviation="20" flood-color="#0f172a" flood-opacity="0.10"/>
     </filter>
-    <linearGradient id="scan" x1="0" x2="1">
-      <stop offset="0" stop-color="#06b6d4" stop-opacity="0"/>
-      <stop offset="0.5" stop-color="#06b6d4" stop-opacity="0.9"/>
-      <stop offset="1" stop-color="#06b6d4" stop-opacity="0"/>
+    <linearGradient id="scan-line" x1="0" x2="1">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity="0"/>
+      <stop offset="0.48" stop-color="#22d3ee" stop-opacity="0.92"/>
+      <stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
     </linearGradient>
+    <pattern id="floor-grid" width="34" height="34" patternUnits="userSpaceOnUse">
+      <path d="M34 0H0V34" fill="none" stroke="#e8edf3" stroke-width="1"/>
+    </pattern>
   </defs>
+
   <rect width="1200" height="720" fill="#f7f8fb"/>
-  <rect x="52" y="46" width="1096" height="628" rx="16" fill="#fff" stroke="#e2e8f0"/>
-  <text x="90" y="104" fill="#0f172a" font-family="Inter, system-ui, sans-serif" font-size="42" font-weight="700">Room Layout AI</text>
-  <text x="92" y="138" fill="#64748b" font-family="Inter, system-ui, sans-serif" font-size="18">Spatial AI Playground</text>
-  <g transform="translate(312 150)" filter="url(#shadow)">
-    <rect width="600" height="420" rx="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
-    <path d="M40 0V420M80 0V420M120 0V420M160 0V420M200 0V420M240 0V420M280 0V420M320 0V420M360 0V420M400 0V420M440 0V420M480 0V420M520 0V420M560 0V420M0 40H600M0 80H600M0 120H600M0 160H600M0 200H600M0 240H600M0 280H600M0 320H600M0 360H600M0 400H600" stroke="#edf2f7"/>
-    <rect x="20" y="332" width="146" height="88" rx="14" fill="#ecfeff" stroke="#67e8f9" stroke-dasharray="8 8"/>
-    <rect x="238" y="172" width="138" height="92" rx="14" fill="#dbeafe" stroke="#60a5fa" stroke-width="2">
-      <animate attributeName="x" values="238;28" dur="1.9s" begin="0.4s" fill="freeze"/>
-      <animate attributeName="y" values="172;28" dur="1.9s" begin="0.4s" fill="freeze"/>
-    </rect>
-    <rect x="286" y="152" width="118" height="54" rx="14" fill="#ccfbf1" stroke="#14b8a6" stroke-width="2">
-      <animate attributeName="x" values="286;454" dur="1.9s" begin="0.4s" fill="freeze"/>
-      <animate attributeName="y" values="152;28" dur="1.9s" begin="0.4s" fill="freeze"/>
-    </rect>
-    <rect x="330" y="218" width="46" height="46" rx="14" fill="#fef3c7" stroke="#f59e0b" stroke-width="2">
-      <animate attributeName="x" values="330;490" dur="1.9s" begin="0.4s" fill="freeze"/>
-      <animate attributeName="y" values="218;100" dur="1.9s" begin="0.4s" fill="freeze"/>
-    </rect>
-    <rect x="82" y="286" width="132" height="62" rx="14" fill="#ffe4e6" stroke="#fb7185" stroke-width="2">
-      <animate attributeName="x" values="82;440" dur="1.9s" begin="0.4s" fill="freeze"/>
-      <animate attributeName="y" values="286;330" dur="1.9s" begin="0.4s" fill="freeze"/>
-    </rect>
-    <rect x="32" y="320" width="94" height="38" rx="14" fill="#f1f5f9" stroke="#64748b" stroke-width="2">
-      <animate attributeName="x" values="32;478" dur="1.9s" begin="0.4s" fill="freeze"/>
-      <animate attributeName="y" values="320;192" dur="1.9s" begin="0.4s" fill="freeze"/>
-    </rect>
-    <rect x="0" y="92" width="600" height="5" rx="3" fill="url(#scan)">
-      <animate attributeName="y" values="42;342;42" dur="2.8s" repeatCount="indefinite"/>
-    </rect>
-  </g>
-  <g transform="translate(928 180)">
-    <rect width="172" height="266" rx="14" fill="#f8fafc" stroke="#e2e8f0"/>
-    <text x="20" y="38" fill="#0f172a" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="700">AI Score</text>
-    <text x="20" y="92" fill="#0891b2" font-family="Inter, system-ui, sans-serif" font-size="46" font-weight="800">92</text>
-    <rect x="20" y="122" width="132" height="10" rx="5" fill="#e2e8f0"/>
-    <rect x="20" y="122" width="116" height="10" rx="5" fill="#0891b2"/>
-    <rect x="20" y="158" width="132" height="10" rx="5" fill="#e2e8f0"/>
-    <rect x="20" y="158" width="104" height="10" rx="5" fill="#7c3aed"/>
-    <rect x="20" y="194" width="132" height="10" rx="5" fill="#e2e8f0"/>
-    <rect x="20" y="194" width="122" height="10" rx="5" fill="#059669"/>
+
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="36" y="30" width="1128" height="76" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="68" y="62" fill="#64748b" font-size="13" font-weight="700">SPATIAL AI PLAYGROUND</text>
+    <text x="68" y="91" fill="#0f172a" font-size="30" font-weight="800">Room Layout AI</text>
+
+    <g transform="translate(768 48)">
+      <rect width="104" height="38" rx="8" fill="#ffffff" stroke="#dbe4ee"/>
+      <text x="23" y="24" fill="#0f172a" font-size="13" font-weight="700">Messy</text>
+    </g>
+    <g transform="translate(884 48)">
+      <rect width="120" height="38" rx="8" fill="#0f172a"/>
+      <text x="22" y="24" fill="#ffffff" font-size="13" font-weight="800">Run Demo</text>
+    </g>
+    <g transform="translate(1018 48)">
+      <rect width="104" height="38" rx="8" fill="#06b6d4"/>
+      <text x="22" y="24" fill="#ffffff" font-size="13" font-weight="800">Optimize</text>
+    </g>
+
+    <g transform="translate(40 126)">
+      <rect width="230" height="544" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+      <text x="24" y="34" fill="#0f172a" font-size="16" font-weight="800">Room controls</text>
+      <text x="24" y="70" fill="#64748b" font-size="12" font-weight="700">WIDTH</text>
+      <rect x="24" y="86" width="174" height="8" rx="4" fill="#e2e8f0"/>
+      <rect x="24" y="86" width="132" height="8" rx="4" fill="#0891b2"/>
+      <text x="24" y="126" fill="#64748b" font-size="12" font-weight="700">DEPTH</text>
+      <rect x="24" y="142" width="174" height="8" rx="4" fill="#e2e8f0"/>
+      <rect x="24" y="142" width="108" height="8" rx="4" fill="#16a34a"/>
+
+      <text x="24" y="204" fill="#0f172a" font-size="16" font-weight="800">Furniture</text>
+      <g transform="translate(24 230)">
+        <rect width="78" height="62" rx="8" fill="#f8fafc" stroke="#dbe4ee"/>
+        <rect x="18" y="18" width="42" height="26" rx="5" fill="#dbeafe" stroke="#60a5fa"/>
+        <text x="23" y="52" fill="#475569" font-size="10" font-weight="700">bed</text>
+      </g>
+      <g transform="translate(116 230)">
+        <rect width="78" height="62" rx="8" fill="#f8fafc" stroke="#dbe4ee"/>
+        <rect x="16" y="20" width="46" height="20" rx="4" fill="#ccfbf1" stroke="#14b8a6"/>
+        <text x="21" y="52" fill="#475569" font-size="10" font-weight="700">desk</text>
+      </g>
+      <g transform="translate(24 308)">
+        <rect width="78" height="62" rx="8" fill="#f8fafc" stroke="#dbe4ee"/>
+        <circle cx="39" cy="30" r="16" fill="#fef3c7" stroke="#f59e0b"/>
+        <text x="18" y="52" fill="#475569" font-size="10" font-weight="700">chair</text>
+      </g>
+      <g transform="translate(116 308)">
+        <rect width="78" height="62" rx="8" fill="#f8fafc" stroke="#dbe4ee"/>
+        <rect x="15" y="21" width="48" height="20" rx="5" fill="#ffe4e6" stroke="#fb7185"/>
+        <text x="21" y="52" fill="#475569" font-size="10" font-weight="700">sofa</text>
+      </g>
+    </g>
+
+    <g transform="translate(292 126)" filter="url(#soft-shadow)">
+      <rect width="610" height="544" rx="8" fill="#ffffff" stroke="#dbe4ee"/>
+      <text x="28" y="36" fill="#0f172a" font-size="17" font-weight="800">Canvas</text>
+      <text x="444" y="36" fill="#0891b2" font-size="13" font-weight="800">AI scan active</text>
+
+      <g transform="translate(42 68)">
+        <rect x="0" y="0" width="526" height="404" rx="6" fill="#faf7f1" stroke="#0f172a" stroke-width="8"/>
+        <rect x="8" y="8" width="510" height="388" fill="url(#floor-grid)" opacity="0.78"/>
+
+        <rect x="250" y="-6" width="148" height="12" rx="6" fill="#67e8f9"/>
+        <rect x="263" y="16" width="124" height="10" rx="5" fill="#cffafe"/>
+        <path d="M0 304 Q78 304 78 382" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5 6"/>
+        <rect x="-8" y="304" width="14" height="78" rx="4" fill="#f8fafc"/>
+        <rect x="24" y="306" width="140" height="74" rx="8" fill="#e0f2fe" stroke="#38bdf8" stroke-dasharray="7 7"/>
+        <text x="45" y="349" fill="#0284c7" font-size="12" font-weight="800">clear entry</text>
+
+        <rect x="196" y="184" width="156" height="110" rx="8" fill="#f1f5f9" opacity="0.82"/>
+        <text x="220" y="243" fill="#64748b" font-size="12" font-weight="800">open path</text>
+
+        <g opacity="0.34" stroke-width="3" fill="none">
+          <path d="M242 206 C132 132 88 96 58 58" stroke="#60a5fa">
+            <animate attributeName="opacity" values="0;0.34;0.10" dur="2.8s" repeatCount="indefinite"/>
+          </path>
+          <path d="M280 224 C370 132 432 86 448 42" stroke="#14b8a6">
+            <animate attributeName="opacity" values="0;0.34;0.10" dur="2.8s" begin="0.18s" repeatCount="indefinite"/>
+          </path>
+          <path d="M310 258 C388 308 430 338 430 336" stroke="#fb7185">
+            <animate attributeName="opacity" values="0;0.34;0.10" dur="2.8s" begin="0.36s" repeatCount="indefinite"/>
+          </path>
+        </g>
+
+        <g>
+          <rect x="220" y="190" width="128" height="86" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+          <rect x="232" y="202" width="40" height="62" rx="6" fill="#eff6ff"/>
+          <text x="248" y="239" fill="#1d4ed8" font-size="13" font-weight="800">BED</text>
+          <animateTransform attributeName="transform" type="translate" values="0 0;-178 -148;-178 -148;0 0" keyTimes="0;0.38;0.82;1" dur="5.2s" repeatCount="indefinite"/>
+        </g>
+
+        <g>
+          <rect x="248" y="162" width="120" height="54" rx="8" fill="#ccfbf1" stroke="#0d9488" stroke-width="2"/>
+          <rect x="270" y="176" width="76" height="10" rx="5" fill="#0f766e" opacity="0.55"/>
+          <text x="285" y="198" fill="#0f766e" font-size="12" font-weight="800">DESK</text>
+          <animateTransform attributeName="transform" type="translate" values="0 0;122 -114;122 -114;0 0" keyTimes="0;0.38;0.82;1" dur="5.2s" repeatCount="indefinite"/>
+        </g>
+
+        <g>
+          <rect x="304" y="224" width="46" height="46" rx="8" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+          <circle cx="327" cy="247" r="10" fill="#fbbf24" opacity="0.35"/>
+          <animateTransform attributeName="transform" type="translate" values="0 0;94 -94;94 -94;0 0" keyTimes="0;0.38;0.82;1" dur="5.2s" repeatCount="indefinite"/>
+        </g>
+
+        <g>
+          <rect x="92" y="286" width="132" height="62" rx="8" fill="#ffe4e6" stroke="#fb7185" stroke-width="2"/>
+          <rect x="104" y="296" width="108" height="17" rx="5" fill="#fecdd3"/>
+          <text x="139" y="331" fill="#be123c" font-size="12" font-weight="800">SOFA</text>
+          <animateTransform attributeName="transform" type="translate" values="0 0;274 42;274 42;0 0" keyTimes="0;0.38;0.82;1" dur="5.2s" repeatCount="indefinite"/>
+        </g>
+
+        <g>
+          <rect x="40" y="318" width="94" height="38" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+          <rect x="52" y="327" width="70" height="10" rx="5" fill="#cbd5e1"/>
+          <animateTransform attributeName="transform" type="translate" values="0 0;392 -142;392 -142;0 0" keyTimes="0;0.38;0.82;1" dur="5.2s" repeatCount="indefinite"/>
+        </g>
+
+        <rect x="0" y="58" width="526" height="6" rx="3" fill="url(#scan-line)">
+          <animate attributeName="y" values="50;318;50" dur="2.5s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+    </g>
+
+    <g transform="translate(924 126)">
+      <rect width="236" height="544" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
+      <text x="22" y="36" fill="#0f172a" font-size="17" font-weight="800">Before / After</text>
+      <text x="22" y="66" fill="#64748b" font-size="12">AI-like heuristic score lift</text>
+
+      <g transform="translate(22 94)">
+        <rect width="192" height="74" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+        <text x="16" y="28" fill="#64748b" font-size="11" font-weight="800">WALKING</text>
+        <text x="16" y="58" fill="#ef4444" font-size="22" font-weight="800">54</text>
+        <text x="78" y="58" fill="#16a34a" font-size="22" font-weight="800">91</text>
+        <text x="142" y="56" fill="#16a34a" font-size="12" font-weight="800">+37</text>
+      </g>
+      <g transform="translate(22 184)">
+        <rect width="192" height="74" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+        <text x="16" y="28" fill="#64748b" font-size="11" font-weight="800">WORKSPACE</text>
+        <text x="16" y="58" fill="#ef4444" font-size="22" font-weight="800">61</text>
+        <text x="78" y="58" fill="#0891b2" font-size="22" font-weight="800">94</text>
+        <text x="142" y="56" fill="#16a34a" font-size="12" font-weight="800">+33</text>
+      </g>
+      <g transform="translate(22 274)">
+        <rect width="192" height="74" rx="8" fill="#f8fafc" stroke="#e2e8f0"/>
+        <text x="16" y="28" fill="#64748b" font-size="11" font-weight="800">FOCUS</text>
+        <text x="16" y="58" fill="#ef4444" font-size="22" font-weight="800">58</text>
+        <text x="78" y="58" fill="#7c3aed" font-size="22" font-weight="800">89</text>
+        <text x="142" y="56" fill="#16a34a" font-size="12" font-weight="800">+31</text>
+      </g>
+
+      <g transform="translate(22 390)">
+        <text x="0" y="0" fill="#0f172a" font-size="14" font-weight="800">AI Score</text>
+        <text x="0" y="54" fill="#0f172a" font-size="50" font-weight="900">92</text>
+        <rect x="0" y="74" width="192" height="10" rx="5" fill="#e2e8f0"/>
+        <rect x="0" y="74" width="172" height="10" rx="5" fill="#06b6d4">
+          <animate attributeName="width" values="88;172;172;88" keyTimes="0;0.38;0.82;1" dur="5.2s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+    </g>
   </g>
 </svg>

@@ -10,6 +10,8 @@ Room Layout AI is a **Spatial AI Playground** for instantly optimizing 2D room l
 
 ![Room Layout AI demo animation](docs/demo.svg)
 
+Open the demo and press **Run Demo** to see a messy room snap into an optimized layout.
+
 ## Demo URL
 
 https://rsasaki0109.github.io/room-layout-ai/
@@ -24,7 +26,7 @@ This repo is configured with Vite `base: "/room-layout-ai/"` and a GitHub Pages 
 
 ## Screenshot
 
-![Room Layout AI screenshot](docs/screenshot.svg)
+![Room Layout AI screenshot](docs/screenshot.png)
 
 ## Concept
 

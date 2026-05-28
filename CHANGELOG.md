@@ -9,6 +9,7 @@
 - Messy Room preset for more dramatic before/after demos.
 - More realistic room layout with walls, entry swing, window, floor texture, and room zones.
 - Before / After comparison panel with score and improvement highlights.
+- README preview assets updated to match the current dogfooding UI.
 
 ## v0.1.0 - 2026-05-27
 
