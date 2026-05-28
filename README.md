@@ -16,6 +16,8 @@ Open the demo and press **Run Demo** to see a messy room snap into an optimized 
 
 https://rsasaki0109.github.io/room-layout-ai/
 
+Autoplay demo: https://rsasaki0109.github.io/room-layout-ai/?demo=1
+
 ## Release
 
 Current release: `v0.1.0`
@@ -43,6 +45,7 @@ The MVP intentionally uses a lightweight heuristic optimizer instead of a backen
 - Drag-to-move furniture
 - Rotate and remove selected furniture
 - One-click Run Demo flow for instant dogfooding
+- `?demo=1` autoplay mode for instant demos and screenshot capture
 - Messy Room preset for dramatic before/after optimization demos
 - AI-style Optimize button with animated spatial scan
 - Before/after movement trails for optimized furniture

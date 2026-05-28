@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
+  ArrowUpRight,
   Armchair,
   BedDouble,
   BookOpen,
@@ -19,14 +20,15 @@ import {
   Sparkles,
   Share2,
   Trash2,
+  X,
 } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { RoomCanvas } from './components/RoomCanvas'
 import { MetricCard } from './components/MetricCard'
 import { furnitureTemplates } from './data/furniture'
 import { metricCopy, metricKeys } from './data/metrics'
 import { useLayoutStore } from './store/layoutStore'
-import type { FurnitureType, Metrics } from './types'
+import type { FurnitureType, Metrics, OptimizationMemory } from './types'
 
 const iconMap: Record<FurnitureType, typeof BedDouble> = {
   bed: BedDouble,
@@ -42,7 +44,9 @@ function App() {
   const [exported, setExported] = useState(false)
   const [exportNonce, setExportNonce] = useState(0)
   const [demoRunning, setDemoRunning] = useState(false)
+  const [reportOpen, setReportOpen] = useState(false)
   const demoTimers = useRef<number[]>([])
+  const seenReportRef = useRef<OptimizationMemory | null>(null)
   const room = useLayoutStore((state) => state.room)
   const furnitures = useLayoutStore((state) => state.furnitures)
   const selectedFurniture = useLayoutStore((state) =>
@@ -68,15 +72,24 @@ function App() {
     : null
   const totalDelta = previousTotalScore === null ? 0 : totalScore - previousTotalScore
   const suggestions = useMemo(() => createSuggestions(metrics, totalDelta), [metrics, totalDelta])
+  const reportGains = useMemo(
+    () => createReportGains(lastOptimization?.beforeMetrics, metrics),
+    [lastOptimization?.beforeMetrics, metrics],
+  )
   const shareText = useMemo(
-    () =>
-      [
+    () => {
+      const topGain = reportGains[0]
+      const lines = [
         `Room Layout AI score: ${totalScore}${totalDelta ? ` (${formatDelta(totalDelta)})` : ''}`,
+        topGain ? `Top gain: ${topGain.label} ${formatDelta(topGain.delta)}` : null,
         `Room: ${(room.width / 100).toFixed(1)}m x ${(room.height / 100).toFixed(1)}m`,
         `Furniture: ${furnitures.map((item) => item.label).join(', ')}`,
         'Optimized with Spatial AI Playground.',
-      ].join('\n'),
-    [furnitures, room.height, room.width, totalDelta, totalScore],
+      ].filter((line): line is string => Boolean(line))
+
+      return lines.join('\n')
+    },
+    [furnitures, reportGains, room.height, room.width, totalDelta, totalScore],
   )
 
   const copyShareText = async () => {
@@ -119,6 +132,31 @@ function App() {
       demoTimers.current.forEach((timer) => window.clearTimeout(timer))
     }
   }, [])
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+
+    if (params.get('demo') !== '1') {
+      return
+    }
+
+    const timer = window.setTimeout(() => runDemo(), 320)
+
+    return () => window.clearTimeout(timer)
+  }, [runDemo])
+
+  useEffect(() => {
+    if (!lastOptimization || optimizing || seenReportRef.current === lastOptimization) {
+      return
+    }
+
+    const timeout = window.setTimeout(() => {
+      seenReportRef.current = lastOptimization
+      setReportOpen(true)
+    }, 80)
+
+    return () => window.clearTimeout(timeout)
+  }, [lastOptimization, optimizing])
 
   return (
     <div className="min-h-screen bg-[#f7f8fb] text-slate-950">
@@ -381,6 +419,185 @@ function App() {
             </button>
           </aside>
         </main>
+
+        <SpatialReport
+          open={reportOpen && !optimizing}
+          beforeMetrics={lastOptimization?.beforeMetrics}
+          totalScore={totalScore}
+          previousTotalScore={previousTotalScore}
+          totalDelta={totalDelta}
+          gains={reportGains}
+          suggestion={suggestions[0]}
+          copied={copied}
+          exported={exported}
+          onClose={() => setReportOpen(false)}
+          onCopy={copyShareText}
+          onExport={requestPngExport}
+        />
+      </div>
+    </div>
+  )
+}
+
+type SpatialReportProps = {
+  open: boolean
+  beforeMetrics?: Metrics
+  totalScore: number
+  previousTotalScore: number | null
+  totalDelta: number
+  gains: ReportGain[]
+  suggestion: string
+  copied: boolean
+  exported: boolean
+  onClose: () => void
+  onCopy: () => void
+  onExport: () => void
+}
+
+function SpatialReport({
+  open,
+  beforeMetrics,
+  totalScore,
+  previousTotalScore,
+  totalDelta,
+  gains,
+  suggestion,
+  copied,
+  exported,
+  onClose,
+  onCopy,
+  onExport,
+}: SpatialReportProps) {
+  const visible = open && Boolean(beforeMetrics)
+  const topGains = gains.slice(0, 3)
+
+  return (
+    <AnimatePresence>
+      {visible ? (
+        <motion.aside
+          role="status"
+          initial={{ opacity: 0, y: 28, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 16, scale: 0.98 }}
+          transition={{ duration: 0.28, ease: 'easeOut' }}
+          className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-[440px] overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xl shadow-slate-950/15 lg:left-auto lg:right-6 lg:w-[440px]"
+        >
+          <div className="flex items-start justify-between gap-4 bg-slate-950 px-4 py-3 text-white">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">
+                <Sparkles className="h-3.5 w-3.5" />
+                AI Spatial Report
+              </div>
+              <div className="mt-1 text-lg font-semibold">Optimized layout generated</div>
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close spatial report"
+              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/10 text-slate-300 transition hover:bg-white/10 hover:text-white"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="p-4">
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+              <ReportScore label="Before" value={previousTotalScore} muted />
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
+                <ArrowUpRight className="h-4 w-4" />
+              </div>
+              <ReportScore label="After" value={totalScore} delta={totalDelta} />
+            </div>
+
+            <div className="mt-4 space-y-2">
+              {topGains.map((gain) => (
+                <div key={gain.label}>
+                  <div className="mb-1 flex items-center justify-between gap-3 text-xs">
+                    <span className="font-semibold text-slate-600">{gain.label}</span>
+                    <span
+                      className={
+                        gain.delta >= 0
+                          ? 'font-semibold tabular-nums text-emerald-700'
+                          : 'font-semibold tabular-nums text-rose-700'
+                      }
+                    >
+                      {formatDelta(gain.delta)}
+                    </span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{ backgroundColor: gain.accent }}
+                      initial={{ width: `${Math.max(8, gain.before)}%` }}
+                      animate={{ width: `${Math.max(8, gain.after)}%` }}
+                      transition={{ duration: 0.5, delay: 0.12 }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-4 rounded-lg border border-cyan-100 bg-cyan-50 px-3 py-2 text-sm leading-5 text-cyan-950">
+              {suggestion}
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={onCopy}
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white text-sm font-semibold text-slate-800 transition hover:border-slate-300 hover:shadow-sm"
+              >
+                {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <Share2 className="h-4 w-4" />}
+                {copied ? 'Copied' : 'Copy report'}
+              </button>
+              <button
+                type="button"
+                onClick={onExport}
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-slate-950 text-sm font-semibold text-white transition hover:bg-slate-800"
+              >
+                {exported ? <Check className="h-4 w-4 text-emerald-300" /> : <Download className="h-4 w-4" />}
+                {exported ? 'Saved' : 'Export room'}
+              </button>
+            </div>
+          </div>
+        </motion.aside>
+      ) : null}
+    </AnimatePresence>
+  )
+}
+
+type ReportScoreProps = {
+  label: string
+  value: number | null
+  delta?: number
+  muted?: boolean
+}
+
+function ReportScore({ label, value, delta, muted = false }: ReportScoreProps) {
+  return (
+    <div className="min-w-0">
+      <div className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+        {label}
+      </div>
+      <div
+        className={
+          muted
+            ? 'mt-1 text-3xl font-semibold tabular-nums text-slate-500'
+            : 'mt-1 flex items-end gap-2 text-3xl font-semibold tabular-nums text-slate-950'
+        }
+      >
+        <span>{value ?? '--'}</span>
+        {delta !== undefined && delta !== 0 ? (
+          <span
+            className={
+              delta > 0
+                ? 'mb-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700'
+                : 'mb-1 rounded-full bg-rose-100 px-2 py-0.5 text-xs font-semibold text-rose-700'
+            }
+          >
+            {formatDelta(delta)}
+          </span>
+        ) : null}
       </div>
     </div>
   )
@@ -487,6 +704,30 @@ function createImprovementHighlights(before: Metrics, after: Metrics) {
       delta: after.freeSpace - before.freeSpace,
     },
   ]
+}
+
+type ReportGain = {
+  label: string
+  before: number
+  after: number
+  delta: number
+  accent: string
+}
+
+function createReportGains(before: Metrics | undefined, after: Metrics): ReportGain[] {
+  if (!before) {
+    return []
+  }
+
+  return metricKeys
+    .map((key) => ({
+      label: metricCopy[key].label,
+      before: before[key],
+      after: after[key],
+      delta: after[key] - before[key],
+      accent: metricCopy[key].accent,
+    }))
+    .sort((first, second) => second.delta - first.delta)
 }
 
 function averageScore(metrics: Metrics) {

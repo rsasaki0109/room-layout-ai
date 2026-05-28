@@ -11,6 +11,8 @@
 - Before / After comparison panel with score and improvement highlights.
 - README preview assets updated to match the current dogfooding UI.
 - GitHub Pages workflow uses current Node 24-compatible GitHub Actions.
+- Spatial Report appears after optimization with score lift, top metric gains, and share/export actions.
+- Autoplay demo mode via `?demo=1`.
 
 ## v0.1.0 - 2026-05-27
 
